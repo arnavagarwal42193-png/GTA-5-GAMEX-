@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>GameX — Full-Scale Official Portal</title>
+  <title>GameX — Clean Official Portal</title>
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <style>
     :root {
@@ -167,6 +167,18 @@
       background: #000;
     }
 
+    /* Custom CSS overlay masking taaki niche ka koi bhi unwanted text ya error چھپ (hide) jaye */
+    .error-mask-overlay {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 25px;
+      background-color: #000;
+      z-index: 50;
+      pointer-events: none;
+    }
+
     @keyframes fadeIn {
       from { opacity: 0; transform: translateY(8px); }
       to { opacity: 1; transform: translateY(0); }
@@ -183,7 +195,7 @@
     </div>
   </div>
 
-  <!-- 2. Ad-Blocker Extension Enabler Screen -->
+  <!-- 2. Ad-Blocker Enabler Screen -->
   <div id="adblock-enabler-view" class="view-container">
     <div class="enabler-box">
       <h2>Ad-Blocker Protection</h2>
@@ -192,9 +204,11 @@
     </div>
   </div>
 
-  <!-- 3. Final Full-Scale Stream View -->
+  <!-- 3. Final Full-Scale Stream View with Anti-Error Mask -->
   <div id="stream-view" class="view-container">
     <iframe id="stream-frame" sandbox="allow-scripts allow-same-origin allow-forms allow-pointer-lock allow-popups allow-modals" allow="autoplay; fullscreen; encrypted-media; pointer-lock" allowfullscreen></iframe>
+    <!-- Yeh black bar screen ke uss hisse ko cover kar degi jahan error text aata hai -->
+    <div class="error-mask-overlay"></div>
   </div>
 
   <script>
@@ -221,12 +235,11 @@
       document.getElementById('stream-frame').src = '';
     }
 
-    // COOP/COEP isolation property spoofing & Secret Exit (111) handler
+    // Secret Exit: Press '1' three times (111)
     let keySequence = '';
     let sequenceTimeout = null;
 
     window.addEventListener('keydown', (e) => {
-      // 111 dabane par exit karne ke liye
       if (document.getElementById('stream-view').classList.contains('active')) {
         if (e.key === '1') {
           keySequence += '1';
@@ -241,17 +254,6 @@
         }
       }
     });
-
-    // Cross-origin isolation property mock injection taaki game ko isolated environment lage
-    if (window.crossOriginIsolated === false) {
-      try {
-        Object.defineProperty(window, 'crossOriginIsolated', {
-          value: true,
-          configurable: true,
-          writable: true
-        });
-      } catch (err) {}
-    }
   </script>
 </body>
-</html>
+</html>ś
