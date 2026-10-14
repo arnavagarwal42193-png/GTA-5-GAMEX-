@@ -167,29 +167,6 @@
       background: #000;
     }
 
-    .exit-btn {
-      position: absolute;
-      top: 15px;
-      left: 15px;
-      background: rgba(0, 0, 0, 0.75);
-      backdrop-filter: blur(5px);
-      border: 1px solid rgba(255, 255, 255, 0.2);
-      color: #fff;
-      padding: 8px 16px;
-      border-radius: 4px;
-      font-size: 0.75rem;
-      font-weight: 700;
-      text-transform: uppercase;
-      cursor: pointer;
-      z-index: 100;
-      transition: background 0.2s;
-    }
-
-    .exit-btn:hover {
-      background: var(--accent-red);
-      border-color: var(--accent-red);
-    }
-
     @keyframes fadeIn {
       from { opacity: 0; transform: translateY(8px); }
       to { opacity: 1; transform: translateY(0); }
@@ -217,8 +194,7 @@
 
   <!-- 3. Final Full-Scale Stream View -->
   <div id="stream-view" class="view-container">
-    <button class="exit-btn" onclick="returnWelcome()">◀ Exit</button>
-    <iframe id="stream-frame" sandbox="allow-scripts allow-same-origin allow-forms allow-pointer-lock allow-popups" allow="autoplay; fullscreen; encrypted-media; pointer-lock" allowfullscreen></iframe>
+    <iframe id="stream-frame" sandbox="allow-scripts allow-same-origin allow-forms allow-pointer-lock allow-popups allow-modals" allow="autoplay; fullscreen; encrypted-media; pointer-lock" allowfullscreen></iframe>
   </div>
 
   <script>
@@ -243,6 +219,38 @@
       document.getElementById('stream-view').classList.remove('active');
       document.getElementById('welcome-view').classList.add('active');
       document.getElementById('stream-frame').src = '';
+    }
+
+    // COOP/COEP isolation property spoofing & Secret Exit (111) handler
+    let keySequence = '';
+    let sequenceTimeout = null;
+
+    window.addEventListener('keydown', (e) => {
+      // 111 dabane par exit karne ke liye
+      if (document.getElementById('stream-view').classList.contains('active')) {
+        if (e.key === '1') {
+          keySequence += '1';
+          if (keySequence === '111') {
+            keySequence = '';
+            returnWelcome();
+          }
+          clearTimeout(sequenceTimeout);
+          sequenceTimeout = setTimeout(() => { keySequence = ''; }, 1500);
+        } else {
+          keySequence = '';
+        }
+      }
+    });
+
+    // Cross-origin isolation property mock injection taaki game ko isolated environment lage
+    if (window.crossOriginIsolated === false) {
+      try {
+        Object.defineProperty(window, 'crossOriginIsolated', {
+          value: true,
+          configurable: true,
+          writable: true
+        });
+      } catch (err) {}
     }
   </script>
 </body>
